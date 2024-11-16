@@ -590,36 +590,36 @@ if st.session_state.page == "final_page":
                 #rp.plot_pie(max_return_weights, title="Optimal Portfolio Composition (Maximizing Returns)", ax=ax)
                 #st.pyplot(fig)
 
-        # New input for stock selection from all Yahoo Finance stocks
-        st.write("Alternatively, select stocks from Yahoo Finance by entering tickers manually.")
-        custom_stocks = st.text_area("Enter stock tickers (comma-separated, e.g., AAPL,GOOGL,AMZN):")
-        custom_stock_list = [ticker.strip() for ticker in custom_stocks.split(",") if ticker.strip()]
-
-        # Combine both selected stock lists
-        all_selected_stocks = list(set(selected_stocks + custom_stock_list))
-
-        # Proceed only if stocks are selected
-        if all_selected_stocks:
-            # Fetch historical data for selected stocks
-            try:
-                stock_data = yf.download(all_selected_stocks, start="2023-01-01")['Adj Close']
-                rets = stock_data.pct_change().dropna()  # Calculate daily returns
-                
-                # Calculate optimal portfolio using riskfolio
-                port = rp.Portfolio(returns=rets)
-                port.assets_stats(method_mu='hist', method_cov='hist')  # Historical mean and covariance
-
-                # Weights in case of minimizing risk
-                min_risk_weights = port.optimization(model='Classic', rm='MV', obj='MinRisk', rf=0, hist=True)
-                st.write("**Optimal Portfolio Weights (Minimizing Risk)**")
-                st.write(min_risk_weights.T)
-
-                # Display portfolio composition for minimizing risk
-                fig, ax = plt.subplots(figsize=(10, 8))
-                rp.plot_pie(min_risk_weights, title="Optimal Portfolio Composition (Minimizing Risk)", ax=ax)
-                st.pyplot(fig)
-
-            except Exception as e:
-                st.error(f"Error building portfolio: {e}")
+            # New input for stock selection from all Yahoo Finance stocks
+            st.write("Alternatively, select stocks from Yahoo Finance by entering tickers manually.")
+            custom_stocks = st.text_area("Enter stock tickers (comma-separated, e.g., AAPL,GOOGL,AMZN):")
+            custom_stock_list = [ticker.strip() for ticker in custom_stocks.split(",") if ticker.strip()]
+    
+            # Combine both selected stock lists
+            all_selected_stocks = list(set(selected_stocks + custom_stock_list))
+    
+            # Proceed only if stocks are selected
+            if all_selected_stocks:
+                # Fetch historical data for selected stocks
+                try:
+                    stock_data = yf.download(all_selected_stocks, start="2023-01-01")['Adj Close']
+                    rets = stock_data.pct_change().dropna()  # Calculate daily returns
+                    
+                    # Calculate optimal portfolio using riskfolio
+                    port = rp.Portfolio(returns=rets)
+                    port.assets_stats(method_mu='hist', method_cov='hist')  # Historical mean and covariance
+    
+                    # Weights in case of minimizing risk
+                    min_risk_weights = port.optimization(model='Classic', rm='MV', obj='MinRisk', rf=0, hist=True)
+                    st.write("**Optimal Portfolio Weights (Minimizing Risk)**")
+                    st.write(min_risk_weights.T)
+    
+                    # Display portfolio composition for minimizing risk
+                    fig, ax = plt.subplots(figsize=(10, 8))
+                    rp.plot_pie(min_risk_weights, title="Optimal Portfolio Composition (Minimizing Risk)", ax=ax)
+                    st.pyplot(fig)
+    
+                except Exception as e:
+                    st.error(f"Error building portfolio: {e}")
     #else:
         #st.warning("Please complete the Risk Tolerance Quiz first to get stock suggestions.")
