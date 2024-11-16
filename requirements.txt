@@ -2,7 +2,7 @@ streamlit
 matplotlib.pyplot
 datetime
 plotly.graph_objs
-pandas as pd
+pandas
 appdirs
 yfinance
 riskfolio
